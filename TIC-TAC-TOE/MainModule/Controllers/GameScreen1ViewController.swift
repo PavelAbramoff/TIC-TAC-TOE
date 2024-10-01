@@ -33,7 +33,7 @@ final class GameScreen1ViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.backgroundColor = UIColor(named: "backgroundColor")
+        view.backgroundColor = UIColor.lightBlue
         view.addSubview(backIcon)
     }
 }
@@ -41,9 +41,10 @@ final class GameScreen1ViewController: UIViewController {
     private extension GameScreen1ViewController {
      func setupConstraints() {
         NSLayoutConstraint.activate([
-            backIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),  // Отступ от верхнего края
-                        backIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),  // Отступ от левого края
-            backIcon.heightAnchor.constraint(equalToConstant: offset),
-            backIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor)])
+            backIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            backIcon.widthAnchor.constraint(equalToConstant: 30),
+            backIcon.heightAnchor.constraint(equalToConstant: 22)
+        ])
             }
 }
