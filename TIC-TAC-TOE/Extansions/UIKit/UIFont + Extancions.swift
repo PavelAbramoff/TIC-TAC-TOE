@@ -21,7 +21,7 @@ extension UIFont {
     
     // Шрифт Bold
     static func customBoldFont(size: CGFloat) -> UIFont {
-        return UIFont(name: "SFPRODISPLAYBOLD", size: size) ?? UIFont.systemFont(ofSize: size, weight: .semibold)
+        return UIFont(name: "SFPRODISPLAYBOLD", size: size) ?? UIFont.systemFont(ofSize: size, weight: .bold)
     }
     
     // Шрифт Semi Bold Italic

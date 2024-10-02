@@ -70,8 +70,9 @@ class OnBoardingViewController: UIViewController {
     }
     
     @objc func playButtonTapped() {
-        print("playButtonTapped")
-        
+        let vc = SelectGameFirstViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
         
         self.playButton.backgroundColor = UIColor.lightBlue
         self.playButton.setTitleColor(UIColor.black, for: .normal)
