@@ -50,30 +50,28 @@ class OnBoardingViewController: UIViewController {
     }
     
     @objc func rulesButtonTapped() {
-        print("rulesButtonTapped")
-        
-        
         self.rulesButton.setImage(UIImage(named: "rulesButtonImageTapped"), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.rulesButton.setImage(UIImage(named: "rulesButtonImage"), for: .normal)
         }
+        
+        print(rulesButtonTapped)
+        let vc = HowToPlayViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+        
     }
     
     @objc func settingsButtonTapped() {
-        print("settingsButtonTapped")
-        
-        
         self.settingsButton.setImage(UIImage(named: "settingsButtonImageTapped"), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.settingsButton.setImage(UIImage(named: "settingsButtonImage"), for: .normal)
         }
+        
+        print(settingsButtonTapped)
     }
     
     @objc func playButtonTapped() {
-        let vc = SelectGameFirstViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
-        
         self.playButton.backgroundColor = UIColor.lightBlue
         self.playButton.setTitleColor(UIColor.black, for: .normal)
         
@@ -81,6 +79,10 @@ class OnBoardingViewController: UIViewController {
             self.playButton.backgroundColor = UIColor.blue
             self.playButton.setTitleColor(UIColor.white, for: .normal)
         }
+        
+        let vc = SelectGameFirstViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
 }
 

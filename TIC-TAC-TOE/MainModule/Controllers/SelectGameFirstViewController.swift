@@ -30,23 +30,23 @@ class SelectGameFirstViewController: UIViewController {
     }
     
     @objc func settingsButtonTapped() {
-        print("settingsButtonTapped")
-        
         self.settingsButton.setImage(UIImage(named: "settingsButtonImageTapped"), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.settingsButton.setImage(UIImage(named: "settingsButtonImage"), for: .normal)
         }
+        
+        print("settingsButtonTapped")
     }
     
     @objc func singlePlayerButtonTapped() {
-        print("singlePlayerButtonTapped")
-        
         updateColorButtons(sender: selectGameView.singlePlayerButton)
+        
+        print("singlePlayerButtonTapped")
     }
     
     @objc func twoPlayersButtonTapped() {
-        print("twoPlayersButtonTapped")
         updateColorButtons(sender: selectGameView.twoPlayersButton)
+        print("twoPlayersButtonTapped")
     }
     
     private func setupButtonTargets() {
