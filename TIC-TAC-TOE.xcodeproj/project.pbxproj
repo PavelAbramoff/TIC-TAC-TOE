@@ -32,7 +32,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1850DE672CA9D0DF00281F71 /* TIC-TAC-TOE */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
 			path = "TIC-TAC-TOE";
 			sourceTree = "<group>";
 		};
