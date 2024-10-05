@@ -69,6 +69,9 @@ class OnBoardingViewController: UIViewController {
         }
         
         print(settingsButtonTapped)
+        let vc = SettinfGameViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func playButtonTapped() {

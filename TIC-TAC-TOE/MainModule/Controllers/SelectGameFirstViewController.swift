@@ -35,7 +35,10 @@ class SelectGameFirstViewController: UIViewController {
             self.settingsButton.setImage(UIImage(named: "settingsButtonImage"), for: .normal)
         }
         
-        print("settingsButtonTapped")
+        print(settingsButtonTapped)
+        let vc = SettinfGameViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func singlePlayerButtonTapped() {
