@@ -18,19 +18,25 @@ class SettinfGameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-                setupViews()
-                setConstraints()
+        setupViews()
+        setConstraints()
     }
     
+    @objc func returnToSelectGameScreen() {
+        let vc = SelectGameFirstViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
+    }
+}
+
+extension SettinfGameViewController {
     private func setupViews() {
         view.backgroundColor = .background
         view.addSubview(returnButton)
         view.addSubview(gameTimeView)
         view.addSubview(items)
+        returnButton.addTarget(self, action: #selector(returnToSelectGameScreen), for: .touchUpInside)
     }
-}
-
-extension SettinfGameViewController {
     
     private func setConstraints() {
         

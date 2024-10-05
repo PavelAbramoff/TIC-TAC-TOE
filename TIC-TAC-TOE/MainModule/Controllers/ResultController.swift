@@ -94,10 +94,23 @@ class ResultController: UIViewController {
     
     @objc func btnPlayAgainTapped() {
         // TODO
+        self.backBtn.backgroundColor = .background
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.backBtn.backgroundColor = .blue
+        }
     }
     
     @objc func btnBackTapped() {
-        // TODO
+        self.backBtn.backgroundColor = .blue
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.backBtn.backgroundColor = .background
+        }
+        
+        let vc = SelectGameFirstViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     // MARK: - Life Cycle
