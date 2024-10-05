@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIColor {
-    static let lightBlue = #colorLiteral(red: 0.8039215686, green: 0.8117647059, blue: 0.8509803922, alpha: 1)
+    static let lightBlue = #colorLiteral(red: 0.9019607843, green: 0.9137254902, blue: 0.9764705882, alpha: 1)
     static let pink = #colorLiteral(red: 0.937254902, green: 0.5529411765, blue: 0.8196078431, alpha: 1)
     static let purple = #colorLiteral(red: 0.8352941176, green: 0.7568627451, blue: 0.9647058824, alpha: 1)
     static let background = #colorLiteral(red: 0.9607843137, green: 0.968627451, blue: 1, alpha: 1)

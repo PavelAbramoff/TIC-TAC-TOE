@@ -83,22 +83,21 @@ final class GameScreen1ViewController: UIViewController {
     
     private let stackBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue // Цвет фона можно изменить при необходимости
+        view.backgroundColor = .blue 
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let squareStackView: UIStackView = {
-        // Функция для создания ряда из 3 изображений
         func createRow() -> UIStackView {
             var squares = [UIImageView]()
             for _ in 1...3 {
                 let square = UIImageView()
-                square.image = .cell  // Подставляем картинку с именем 'cell'
+                square.image = .cell
                 square.translatesAutoresizingMaskIntoConstraints = false
-                square.contentMode = .scaleAspectFit   // Устанавливаем режим для сохранения пропорций изображения
-                square.widthAnchor.constraint(equalToConstant: 74).isActive = true  // Задаем ширину
-                square.heightAnchor.constraint(equalToConstant: 74).isActive = true  // Задаем высоту
+                square.contentMode = .scaleAspectFit
+                square.widthAnchor.constraint(equalToConstant: 74).isActive = true
+                square.heightAnchor.constraint(equalToConstant: 74).isActive = true
                 squares.append(square)
             }
             
@@ -110,50 +109,16 @@ final class GameScreen1ViewController: UIViewController {
             return rowStack
         }
         
-        // Создаем три ряда и объединяем их в вертикальный стэк
+        // Создаем три ряда ячеек
         let stackView = UIStackView(arrangedSubviews: [createRow(), createRow(), createRow()])
-        stackView.axis = .vertical  // Вертикальная ориентация
-        stackView.spacing = 10      // Отступы между строками
+        stackView.axis = .vertical
+        stackView.spacing = 10
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
     }()
-//    private let player1TitleFrame: UIStackView = {
-//        
-//        let cell = UIImageView()
-//        cell.image = .cell
-//        cell.translatesAutoresizingMaskIntoConstraints = false
-//        cell.contentMode = .scaleAspectFit
-//        
-//        let oskin = UIImageView()
-//        oskin.image = .oskin1
-//        oskin.translatesAutoresizingMaskIntoConstraints = false
-//        oskin.contentMode = .scaleAspectFit
-//        
-//        let youLabel = UILabel()
-//        youLabel.text = "You"
-//        youLabel.translatesAutoresizingMaskIntoConstraints = false
-//        youLabel.contentMode = .scaleAspectFit
-//        
-//        let stackView = UIStackView(arrangedSubviews: [cell, oskin, youLabel])  // Добавляем imageView в стэк
-//        stackView.axis = .horizontal  // Ориентация стэка по горизонтали (можно поменять на .vertical)
-//        stackView.spacing = 1         // Задаем отступы между элементами стэка
-//        stackView.alignment = .center // Центрирование элементов
-//        stackView.distribution = .equalSpacing // Равномерное распределение элементов
-//        stackView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        oskin.widthAnchor.constraint(equalToConstant: 54).isActive = true
-//        oskin.heightAnchor.constraint(equalToConstant: 54).isActive = true
-//           
-//        youLabel.widthAnchor.constraint(equalToConstant: 54).isActive = true
-//        youLabel.heightAnchor.constraint(equalToConstant: 54).isActive = true
-//        
-//        return stackView
-//    }()
-    
-    
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -226,13 +191,8 @@ private extension GameScreen1ViewController {
             stackBackground.widthAnchor.constraint(equalToConstant: 300),
             stackBackground.heightAnchor.constraint(equalToConstant: 300),
                         
-            // Констрейнты для squareStackView
             squareStackView.centerXAnchor.constraint(equalTo: stackBackground.centerXAnchor),
             squareStackView.centerYAnchor.constraint(equalTo: stackBackground.centerYAnchor)
-//            player1TitleFrame.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-//            player1TitleFrame.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-//            player1TitleFrame.widthAnchor.constraint(equalToConstant: 330),
-//            player1TitleFrame.heightAnchor.constraint(equalToConstant: 103)
         ])
      }
 }
