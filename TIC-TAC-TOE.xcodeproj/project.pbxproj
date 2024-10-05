@@ -29,9 +29,22 @@
 		1850DE852CA9D0E100281F71 /* TIC-TAC-TOEUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TIC-TAC-TOEUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		187AAA302CB1D928006FC909 /* Exceptions for "TIC-TAC-TOE" folder in "TIC-TAC-TOE" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				SupportingFiles/Info.plist,
+			);
+			target = 1850DE642CA9D0DF00281F71 /* TIC-TAC-TOE */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1850DE672CA9D0DF00281F71 /* TIC-TAC-TOE */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				187AAA302CB1D928006FC909 /* Exceptions for "TIC-TAC-TOE" folder in "TIC-TAC-TOE" target */,
+			);
 			path = "TIC-TAC-TOE";
 			sourceTree = "<group>";
 		};
