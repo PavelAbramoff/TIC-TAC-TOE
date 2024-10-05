@@ -34,8 +34,9 @@ class SelectGameFirstViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.settingsButton.setImage(UIImage(named: "settingsButtonImage"), for: .normal)
         }
-        
-        print("settingsButtonTapped")
+        let vc = SettinfGameViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func singlePlayerButtonTapped() {
