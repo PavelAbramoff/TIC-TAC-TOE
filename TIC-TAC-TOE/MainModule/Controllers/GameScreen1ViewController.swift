@@ -16,14 +16,13 @@ final class GameScreen1ViewController: UIViewController {
     let smallButtonSize: CGFloat = 40
     
     // MARK: - UI Properties
-//    private let backIcon: UIImageView = {
-//        let imageView = UIImageView()
-//        imageView.image = .backIcon
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.contentMode = .scaleAspectFit
-//        return imageView
-//    }()
-    private lazy var returnButton = ReturnButton(type: .system)
+    private let backIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = .backIcon
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     
     private let youCell: UIImageView = {
         let imageView = UIImageView()
@@ -84,8 +83,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let stackBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 30
+        view.backgroundColor = .blue 
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -122,12 +120,6 @@ final class GameScreen1ViewController: UIViewController {
         return stackView
     }()
     
-    @objc func returnToSelectGameScreen() {
-        let vc = SelectGameFirstViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
-    }
-    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,8 +129,8 @@ final class GameScreen1ViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.backgroundColor = .background
-        view.addSubview(returnButton)
+        view.backgroundColor = UIColor.lightGray
+        view.addSubview(backIcon)
         view.addSubview(youCell)
         view.addSubview(oskin)
         view.addSubview(youLabel)
@@ -148,24 +140,18 @@ final class GameScreen1ViewController: UIViewController {
         view.addSubview(turnLabel)
         view.addSubview(stackBackground)
         view.addSubview(squareStackView)
-        returnButton.addTarget(self, action: #selector(returnToSelectGameScreen), for: .touchUpInside)
     }
 }
 // MARK: - Setup Constraints
 private extension GameScreen1ViewController {
      func setupConstraints() {
         NSLayoutConstraint.activate([
-//            backIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-//            backIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-//            backIcon.widthAnchor.constraint(equalToConstant: 30),
-//            backIcon.heightAnchor.constraint(equalToConstant: 22),
+            backIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            backIcon.widthAnchor.constraint(equalToConstant: 30),
+            backIcon.heightAnchor.constraint(equalToConstant: 22),
             
-            returnButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            returnButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            returnButton.widthAnchor.constraint(equalToConstant: 30),
-            returnButton.heightAnchor.constraint(equalToConstant: 22),
-            
-            youCell.topAnchor.constraint(equalTo: returnButton.bottomAnchor, constant: 20),
+            youCell.topAnchor.constraint(equalTo: backIcon.bottomAnchor, constant: 20),
             youCell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             youCell.widthAnchor.constraint(equalToConstant: 103),
             youCell.heightAnchor.constraint(equalToConstant: 103),
