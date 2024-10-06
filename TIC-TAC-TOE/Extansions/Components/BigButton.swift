@@ -21,15 +21,21 @@ class BigButton: UIButton {
     convenience init(text: String) {
         self.init(type: .system)
         setTitle(text, for: .normal)
-        self.backgroundColor = .purple
-        configuure()
+//        self.backgroundColor = .purple
+        configuure(text: text)
     }
     
-    private func configuure() {
-        backgroundColor = .purple
+    private func configuure(text: String) {
+        if text == "Picked" {
+            backgroundColor = .blue
+            tintColor = .white
+        } else {
+            backgroundColor = .background
+            tintColor = .black
+        }
+        
         layer.cornerRadius = 20
         titleLabel?.font = .boldSystemFont(ofSize: 15)
-        tintColor = .black
         translatesAutoresizingMaskIntoConstraints = false
     }
 }
