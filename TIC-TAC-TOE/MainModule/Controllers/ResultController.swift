@@ -99,6 +99,10 @@ class ResultController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.backBtn.backgroundColor = .blue
         }
+        
+        let vc = GameScreen1ViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func btnBackTapped() {
