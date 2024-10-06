@@ -176,8 +176,9 @@ extension GameScreen1ViewController {
             totalSeconds = 30
             return
         }
-        //totalSeconds = gameTimeDuration
-        totalSeconds = 10
+        if gameTimeDuration > 0 {
+            totalSeconds = gameTimeDuration
+        }
     }
     
     private func startTimer() {
