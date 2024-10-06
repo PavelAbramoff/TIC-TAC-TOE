@@ -14,6 +14,8 @@ final class GameScreen1ViewController: UIViewController {
     let fontSize: CGFloat = 20
     let offset: CGFloat = 60
     let smallButtonSize: CGFloat = 40
+    private var timer: Timer?
+    private var totalSeconds: Int = 0
     
     // MARK: - UI Properties
     private let backIcon: UIImageView = {
@@ -46,6 +48,21 @@ final class GameScreen1ViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }()
+    
+    private let centerSeparatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let timerLabel: UILabel = {
+        let label = UILabel()
+        label.text = "00:00"
+        label.textAlignment = .center
+        label.font = UIFont.customBoldFont(size: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let player2Cell: UIImageView = {
@@ -125,6 +142,13 @@ final class GameScreen1ViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
+        startTimer()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getTimeDuration()
+        timerLabel.text = formatTime(seconds: totalSeconds)
     }
     
     // MARK: - Private Methods
@@ -134,6 +158,8 @@ final class GameScreen1ViewController: UIViewController {
         view.addSubview(youCell)
         view.addSubview(oskin)
         view.addSubview(youLabel)
+        view.addSubview(centerSeparatorView)
+        centerSeparatorView.addSubview(timerLabel)
         view.addSubview(player2Cell)
         view.addSubview(xskin)
         view.addSubview(player2Label)
@@ -142,6 +168,40 @@ final class GameScreen1ViewController: UIViewController {
         view.addSubview(squareStackView)
     }
 }
+
+// MARK: - Timer
+extension GameScreen1ViewController {
+    private func getTimeDuration() {
+        guard let gameTimeDuration = UserDefaults.standard.object(forKey: "GameTimeDuration") as? Int else {
+            totalSeconds = 30
+            return
+        }
+        //totalSeconds = gameTimeDuration
+        totalSeconds = 10
+    }
+    
+    private func startTimer() {
+           timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+       }
+    
+       @objc private func updateTimer() {
+           if totalSeconds > 0 {
+               totalSeconds -= 1
+               timerLabel.text = formatTime(seconds: totalSeconds)
+               
+           } else {
+               timer?.invalidate() // Остановка таймера по истечению времени
+               timer = nil
+           }
+       }
+       
+       private func formatTime(seconds: Int) -> String {
+           let minutes = seconds / 60
+           let remainingSeconds = seconds % 60
+           return String(format: "%02d:%02d", minutes, remainingSeconds)
+       }
+}
+
 // MARK: - Setup Constraints
 private extension GameScreen1ViewController {
      func setupConstraints() {
@@ -165,6 +225,14 @@ private extension GameScreen1ViewController {
             youLabel.centerXAnchor.constraint(equalTo: oskin.centerXAnchor),
             youLabel.widthAnchor.constraint(equalToConstant: 83),
             youLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            centerSeparatorView.topAnchor.constraint(equalTo: youCell.topAnchor),
+            centerSeparatorView.leadingAnchor.constraint(equalTo: youCell.trailingAnchor, constant: 10),
+            centerSeparatorView.trailingAnchor.constraint(equalTo: player2Cell.leadingAnchor, constant: -10),
+            centerSeparatorView.bottomAnchor.constraint(equalTo: youCell.bottomAnchor),
+            
+            timerLabel.centerXAnchor.constraint(equalTo: centerSeparatorView.centerXAnchor),
+            timerLabel.centerYAnchor.constraint(equalTo: centerSeparatorView.centerYAnchor),
             
             player2Cell.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 58),
             player2Cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 265),
