@@ -36,7 +36,7 @@ class SelectGameFirstViewController: UIViewController {
         }
         
         print(settingsButtonTapped)
-        let vc = SettinfGameViewController()
+        let vc = SettingGameViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }

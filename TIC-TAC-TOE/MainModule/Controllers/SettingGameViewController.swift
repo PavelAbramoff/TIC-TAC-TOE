@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SettinfGameViewController: UIViewController {
+class SettingGameViewController: UIViewController {
     
     private lazy var returnButton = ReturnButton(type: .system)
     
@@ -29,7 +29,7 @@ class SettinfGameViewController: UIViewController {
     }
 }
 
-extension SettinfGameViewController {
+extension SettingGameViewController {
     private func setupViews() {
         view.backgroundColor = .background
         view.addSubview(returnButton)
