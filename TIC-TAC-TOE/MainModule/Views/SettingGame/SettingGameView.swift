@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Foundation
 
 class SettingGameView: UIView {
+    
+    let defaults = UserDefaults.standard
     
     private let backView: UIView = {
         let view = UIView()
@@ -31,7 +34,7 @@ class SettingGameView: UIView {
                                         
     private let repeatSwitch: UISwitch = {
         let repeatSwitch = UISwitch()
-        repeatSwitch.isOn = false
+//        repeatSwitch.isOn = false
         repeatSwitch.onTintColor = .blue
         repeatSwitch.addTarget(self, action: #selector(repateSwitchToggled), for: .valueChanged)
         repeatSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -68,22 +71,24 @@ class SettingGameView: UIView {
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         button.tintColor = .black
-        button.alpha = 0
+//        button.alpha = 0
         button.semanticContentAttribute = .forceRightToLeft
+        button.addTarget(self, action: #selector(changeTime), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var secondTimeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = .purple
+//        button.backgroundColor = .purple
         button.setTitle("60 min", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         button.tintColor = .black
-        button.alpha = 0
+//        button.alpha = 0
         button.semanticContentAttribute = .forceRightToLeft
+        button.addTarget(self, action: #selector(changeTime), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -95,8 +100,9 @@ class SettingGameView: UIView {
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
         button.tintColor = .black
-        button.alpha = 0
+//        button.alpha = 0
         button.semanticContentAttribute = .forceRightToLeft
+        button.addTarget(self, action: #selector(changeTime), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -107,6 +113,12 @@ class SettingGameView: UIView {
         addShadowOnView()
         setupView()
         setConstraints()
+        
+        if let myValue = defaults.object(forKey: "GameTimeDuration") {
+            let gameTimeDuration = myValue
+            
+            selectNewTime(time: gameTimeDuration as! Int)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -128,20 +140,82 @@ class SettingGameView: UIView {
     
     @objc func repateSwitchToggled() {
         if repeatSwitch.isOn {
+            selectNewTime(time: 60)
+            
             UIView.animate(withDuration: 0.5, animations: {
                 self.firstTimeButton.alpha = 1
                 self.secondTimeButton.alpha = 1
                 self.thirdTimeButton.alpha = 1
             })
         } else {
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.firstTimeButton.alpha = 0
-                    self.secondTimeButton.alpha = 0
-                    self.thirdTimeButton.alpha = 0
-                })
-            }
+            UIView.animate(withDuration: 0.5, animations: {
+                self.firstTimeButton.alpha = 0
+                self.secondTimeButton.alpha = 0
+                self.thirdTimeButton.alpha = 0
+            })
+            
+            defaults.set(0, forKey: "GameTimeDuration")
         }
     }
+    
+    @objc func changeTime(btn: UIButton) {
+        let str = btn.currentTitle!
+        let ch = Character(" ")
+        let result = str.split(separator: ch)
+        let timeStr: String = String(result[0])
+        let time = Int(timeStr)!
+        
+        selectNewTime(time: time)
+    }
+    
+    func selectNewTime(time: Int) {
+        defaults.set(time, forKey: "GameTimeDuration")
+        
+        switch time {
+        case 0:
+            repeatSwitch.isOn = false
+            firstTimeButton.backgroundColor = .background
+            secondTimeButton.backgroundColor = .background
+            thirdTimeButton.backgroundColor = .background
+            firstTimeButton.alpha = 0
+            secondTimeButton.alpha = 0
+            thirdTimeButton.alpha = 0
+        case 30:
+            repeatSwitch.isOn = true
+            firstTimeButton.backgroundColor = .purple
+            secondTimeButton.backgroundColor = .background
+            thirdTimeButton.backgroundColor = .background
+            firstTimeButton.alpha = 1
+            secondTimeButton.alpha = 1
+            thirdTimeButton.alpha = 1
+        case 60:
+            repeatSwitch.isOn = true
+            firstTimeButton.backgroundColor = .background
+            secondTimeButton.backgroundColor = .purple
+            thirdTimeButton.backgroundColor = .background
+            firstTimeButton.alpha = 1
+            secondTimeButton.alpha = 1
+            thirdTimeButton.alpha = 1
+        case 120:
+            repeatSwitch.isOn = true
+            firstTimeButton.backgroundColor = .background
+            secondTimeButton.backgroundColor = .background
+            thirdTimeButton.backgroundColor = .purple
+            firstTimeButton.alpha = 1
+            secondTimeButton.alpha = 1
+            thirdTimeButton.alpha = 1
+        default:
+            repeatSwitch.isOn = false
+            firstTimeButton.backgroundColor = .background
+            secondTimeButton.backgroundColor = .background
+            thirdTimeButton.backgroundColor = .background
+            firstTimeButton.alpha = 0
+            secondTimeButton.alpha = 0
+            thirdTimeButton.alpha = 0
+        }
+        
+    }
+}
 
 extension SettingGameView {
     
