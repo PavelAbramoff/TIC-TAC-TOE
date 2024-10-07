@@ -10,20 +10,30 @@ import UIKit
 
 final class GameScreen1ViewController: UIViewController {
     
+    var board = [Int](repeating: 0, count: 9)
+    private var currentPlayer = 1
+    private var timer: Timer?
+    private var totalSeconds: Int = 0
+    // Победные комбинации
+    let winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Горизонтальные линии
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Вертикальные линии
+        [0, 4, 8], [2, 4, 6]              // Диагональные линии
+    ]
+    
     //MARK: - Dependencies
     let fontSize: CGFloat = 20
     let offset: CGFloat = 60
     let smallButtonSize: CGFloat = 40
-    private var timer: Timer?
-    private var totalSeconds: Int = 0
+    
     
     // MARK: - UI Properties
-    private let backIcon: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = .backIcon
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    private lazy var backIcon: UIButton = {
+        let button = UIButton()
+        button.setImage(.backIcon, for: .normal)
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let youCell: UIImageView = {
@@ -44,8 +54,10 @@ final class GameScreen1ViewController: UIViewController {
     
     private let youLabel: UILabel = {
         let imageView = UILabel()
-        imageView.text = "You"
+        imageView.text = "Your"
+        imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.textAlignment = .center
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -84,9 +96,20 @@ final class GameScreen1ViewController: UIViewController {
     private let player2Label: UILabel = {
         let imageView = UILabel()
         imageView.text = "Player Two"
+        imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }()
+    
+    private let turnImage: UIImageView = {
+        let image = UIImageView()
+        image.image = .oskin1
+        image.contentMode = .scaleAspectFit
+        image.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 53).isActive = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
     }()
     
     private let turnLabel: UILabel = {
@@ -98,38 +121,66 @@ final class GameScreen1ViewController: UIViewController {
         return label
     }()
     
+    private let turnStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     private let stackBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue 
+        view.backgroundColor = UIColor.white
+        view.layer.cornerRadius = 30
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let squareStackView: UIStackView = {
-        func createRow() -> UIStackView {
-            var squares = [UIImageView]()
-            for _ in 1...3 {
-                let square = UIImageView()
-                square.image = .cell
-                square.translatesAutoresizingMaskIntoConstraints = false
-                square.contentMode = .scaleAspectFit
-                square.widthAnchor.constraint(equalToConstant: 74).isActive = true
-                square.heightAnchor.constraint(equalToConstant: 74).isActive = true
-                squares.append(square)
+    private lazy var squareStackView: UIStackView = {
+        func createRow(_ at: Int, _ to: Int) -> UIStackView {
+            var buttons = [UIView]()
+            
+            for i in at...to {
+                let containerView = UIView()
+                containerView.layer.cornerRadius = 20
+                containerView.backgroundColor = .lightBlue
+                containerView.translatesAutoresizingMaskIntoConstraints = false
+                containerView.widthAnchor.constraint(equalToConstant: 74).isActive = true
+                containerView.heightAnchor.constraint(equalToConstant: 74).isActive = true
+                
+                let button = UIButton()
+                button.setBackgroundImage(.cell, for: .normal)
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.contentMode = .scaleAspectFit
+                button.tag = i // Индекс кнопки
+                button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+                containerView.addSubview(button)
+                
+                NSLayoutConstraint.activate([
+                    button.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+                    button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                    button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+                    button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10)
+                ])
+                
+                buttons.append(containerView)
             }
             
-            let rowStack = UIStackView(arrangedSubviews: squares)
+            let rowStack = UIStackView(arrangedSubviews: buttons)
             rowStack.axis = .horizontal
-            rowStack.spacing = 10
+            rowStack.spacing = 20
             rowStack.alignment = .center
             rowStack.distribution = .equalSpacing
             return rowStack
         }
         
         // Создаем три ряда ячеек
-        let stackView = UIStackView(arrangedSubviews: [createRow(), createRow(), createRow()])
+        let stackView = UIStackView(arrangedSubviews: [createRow(0, 2), createRow(3, 5), createRow(6, 8)])
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = 20
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -153,7 +204,7 @@ final class GameScreen1ViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor.background
         view.addSubview(backIcon)
         view.addSubview(youCell)
         view.addSubview(oskin)
@@ -163,9 +214,105 @@ final class GameScreen1ViewController: UIViewController {
         view.addSubview(player2Cell)
         view.addSubview(xskin)
         view.addSubview(player2Label)
-        view.addSubview(turnLabel)
+        view.addSubview(turnStackView)
+        turnStackView.addArrangedSubview(turnImage)
+        turnStackView.addArrangedSubview(turnLabel)
         view.addSubview(stackBackground)
         view.addSubview(squareStackView)
+    }
+    
+    @objc func backButtonTapped() {
+        dismiss(animated: true)
+    }
+    
+    private func updateTurnIndicator(numberOfUser: Int) {
+        if numberOfUser == 1 {
+            turnLabel.text = "Your Turn"
+            turnImage.image = .oskin1
+        } else {
+            turnLabel.text = "Player Two turn"
+            turnImage.image = .xskin1
+        }
+        
+    }
+    
+}
+// MARK: Logic Game
+extension GameScreen1ViewController {
+    @objc func buttonTapped(sender: UIButton) {
+        let index = sender.tag
+        
+        // Проверяем, что клетка пуста
+        if board[index] == 0 {
+            // Заполняем клетку в зависимости от текущего игрока
+            if currentPlayer == 1 {
+                sender.setBackgroundImage(UIImage(named: "Xskin1"), for: .normal)
+                board[index] = 1
+                updateTurnIndicator(numberOfUser: currentPlayer)
+            } else {
+                sender.setBackgroundImage(UIImage(named: "Oskin1"), for: .normal)
+                board[index] = 2
+                updateTurnIndicator(numberOfUser: currentPlayer)
+            }
+            
+            // Проверяем, есть ли победитель
+            if let winner = checkForWinner() {
+                showWinner(winner: winner)
+            } else if board.allSatisfy({ $0 != 0 }) {
+                // Если все клетки заполнены, и нет победителя — ничья
+                showWinner(winner: 0)
+            }
+            
+            // Переключаем игрока
+            currentPlayer = currentPlayer == 1 ? 2 : 1
+        }
+        var printString: String = " "
+        for i in board {
+            
+            printString += String(i)
+            
+        }
+        print(printString)
+    }
+    
+    // Проверяем, есть ли победитель
+    private func checkForWinner() -> Int? {
+        for combination in winningCombinations {
+            let (a, b, c) = (board[combination[0]], board[combination[1]], board[combination[2]])
+            if a != 0 && a == b && b == c {
+                return a // Возвращаем победителя (1 - крестик, 2 - нолик)
+            }
+        }
+        return nil
+    }
+    
+// MARK: - WINNER
+    private func showWinner(winner: Int) {
+        // 0 - Ничья, 1 - Победа крестики, 2 - Победа нолик
+        print("Победитель - \(winner)")
+        stopTimer()
+        
+//        let vc = ResultController()
+//        vc.modalPresentationStyle = .fullScreen
+//        present(vc, animated: true)
+    }
+    
+    // Сбрасываем игру
+    private func resetGame() {
+        board = [Int](repeating: 0, count: 9)
+        currentPlayer = 1
+        stopTimer()
+        
+        // Получаем все кнопки из squareStackView
+        for subStack in squareStackView.arrangedSubviews {
+            if let rowStack = subStack as? UIStackView {
+                for subview in rowStack.arrangedSubviews {
+                    if let button = subview as? UIButton {
+                        button.setBackgroundImage(.cell, for: .normal)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -182,25 +329,30 @@ extension GameScreen1ViewController {
     }
     
     private func startTimer() {
-           timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-       }
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
     
-       @objc private func updateTimer() {
-           if totalSeconds > 0 {
-               totalSeconds -= 1
-               timerLabel.text = formatTime(seconds: totalSeconds)
-               
-           } else {
-               timer?.invalidate() // Остановка таймера по истечению времени
-               timer = nil
-           }
-       }
-       
-       private func formatTime(seconds: Int) -> String {
-           let minutes = seconds / 60
-           let remainingSeconds = seconds % 60
-           return String(format: "%02d:%02d", minutes, remainingSeconds)
-       }
+    @objc private func updateTimer() {
+        if totalSeconds > 0 {
+            totalSeconds -= 1
+            timerLabel.text = formatTime(seconds: totalSeconds)
+            
+        } else {
+            stopTimer()
+            // Сделать переход на проигрыш из-за истечения времени
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate() // Остановка таймера по истечению времени
+        timer = nil
+    }
+    
+    private func formatTime(seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        return String(format: "%02d:%02d", minutes, remainingSeconds)
+    }
 }
 
 // MARK: - Setup Constraints
@@ -250,12 +402,10 @@ private extension GameScreen1ViewController {
             player2Label.widthAnchor.constraint(equalToConstant: 83),
             player2Label.heightAnchor.constraint(equalToConstant: 20),
             
-            turnLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 215),
-            turnLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            turnLabel.widthAnchor.constraint(equalToConstant: 94),
-            turnLabel.heightAnchor.constraint(equalToConstant: 24),
+            turnStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 215),
+            turnStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            stackBackground.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 315),
+            stackBackground.topAnchor.constraint(equalTo: turnLabel.bottomAnchor, constant: 44),
             stackBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackBackground.widthAnchor.constraint(equalToConstant: 300),
             stackBackground.heightAnchor.constraint(equalToConstant: 300),

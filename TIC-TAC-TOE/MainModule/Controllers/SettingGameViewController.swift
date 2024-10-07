@@ -23,9 +23,7 @@ class SettingGameViewController: UIViewController {
     }
     
     @objc func returnToSelectGameScreen() {
-        let vc = SelectGameFirstViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
+        dismiss(animated: true)
     }
 }
 
