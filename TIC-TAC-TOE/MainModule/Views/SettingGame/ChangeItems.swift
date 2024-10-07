@@ -11,15 +11,6 @@ class ChangeItems: UIView {
     
     // MARK: First Item
     
-    private let backView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        //view.layer.cornerRadius = 30
-        //view.addShadowOnView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     private let firstbackView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -58,7 +49,6 @@ class ChangeItems: UIView {
         return view
     }()
     
-
     private let crossImageViewSecondItem: UIImageView = {
        let imageView = UIImageView()
         imageView.image = UIImage(named: "Xskin4")
@@ -88,7 +78,6 @@ class ChangeItems: UIView {
         return view
     }()
     
-
     private let crossImageViewThirdItem: UIImageView = {
        let imageView = UIImageView()
         imageView.image = UIImage(named: "Xskin3")
@@ -118,7 +107,6 @@ class ChangeItems: UIView {
         return view
     }()
     
-
     private let crossImageViewForItem: UIImageView = {
        let imageView = UIImageView()
         imageView.image = UIImage(named: "Xskin5")
@@ -148,7 +136,6 @@ class ChangeItems: UIView {
         return view
     }()
     
-
     private let crossImageViewFiveItem: UIImageView = {
        let imageView = UIImageView()
         imageView.image = UIImage(named: "Xskin6")
@@ -178,7 +165,6 @@ class ChangeItems: UIView {
         return view
     }()
     
-
     private let crossImageViewSixItem: UIImageView = {
        let imageView = UIImageView()
         imageView.image = UIImage(named: "Isolation_Mode")
@@ -209,8 +195,6 @@ class ChangeItems: UIView {
     }
     
     private func setupView() {
-       
-        addSubview(backView)
         
         addSubview(firstbackView)
         addSubview(crossImageView)
@@ -251,11 +235,11 @@ extension ChangeItems {
     private func setConstraints() {
         NSLayoutConstraint.activate([
             
-            backView.heightAnchor.constraint(equalToConstant: 490),
-            backView.widthAnchor.constraint(equalToConstant: 324),
+            self.heightAnchor.constraint(equalToConstant: 900),
+            self.widthAnchor.constraint(equalToConstant: 324),
             
-            firstbackView.topAnchor.constraint(equalTo: backView.topAnchor),
-            firstbackView.leadingAnchor.constraint(equalTo: backView.leadingAnchor),
+            firstbackView.topAnchor.constraint(equalTo: self.topAnchor),
+            firstbackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             firstbackView.heightAnchor.constraint(equalToConstant: 150),
             firstbackView.widthAnchor.constraint(equalToConstant: 152),
             
@@ -275,8 +259,8 @@ extension ChangeItems {
             button.widthAnchor.constraint(equalToConstant: 112),
             
             // MARK: SeconsItems
-            backViewSecondItem.topAnchor.constraint(equalTo: backView.topAnchor),
-            backViewSecondItem.trailingAnchor.constraint(equalTo: backView.trailingAnchor ),
+            backViewSecondItem.topAnchor.constraint(equalTo: self.topAnchor),
+            backViewSecondItem.trailingAnchor.constraint(equalTo: self.trailingAnchor ),
             backViewSecondItem.heightAnchor.constraint(equalToConstant: 150),
             backViewSecondItem.widthAnchor.constraint(equalToConstant: 152),
             
@@ -298,7 +282,7 @@ extension ChangeItems {
             // MARK: ThirdItem
             
             backViewThirdItem.topAnchor.constraint(equalTo: firstbackView.bottomAnchor, constant: 20),
-            backViewThirdItem.leadingAnchor.constraint(equalTo: backView.leadingAnchor ),
+            backViewThirdItem.leadingAnchor.constraint(equalTo: self.leadingAnchor ),
             backViewThirdItem.heightAnchor.constraint(equalToConstant: 150),
             backViewThirdItem.widthAnchor.constraint(equalToConstant: 152),
             
@@ -320,7 +304,7 @@ extension ChangeItems {
             // MARK: ForItem
             
             backViewForItem.topAnchor.constraint(equalTo: firstbackView.bottomAnchor, constant: 20),
-            backViewForItem.trailingAnchor.constraint(equalTo: backView.trailingAnchor ),
+            backViewForItem.trailingAnchor.constraint(equalTo: self.trailingAnchor ),
             backViewForItem.heightAnchor.constraint(equalToConstant: 150),
             backViewForItem.widthAnchor.constraint(equalToConstant: 152),
             
@@ -342,7 +326,7 @@ extension ChangeItems {
             // MARK: FiveItem
             
             backViewFiveItem.topAnchor.constraint(equalTo: backViewThirdItem.bottomAnchor, constant: 20),
-            backViewFiveItem.leadingAnchor.constraint(equalTo: backView.leadingAnchor ),
+            backViewFiveItem.leadingAnchor.constraint(equalTo: self.leadingAnchor ),
             backViewFiveItem.heightAnchor.constraint(equalToConstant: 150),
             backViewFiveItem.widthAnchor.constraint(equalToConstant: 152),
             
@@ -364,7 +348,7 @@ extension ChangeItems {
             // MARK: Six Item
             
             backViewSixItem.topAnchor.constraint(equalTo: backViewThirdItem.bottomAnchor, constant: 20),
-            backViewSixItem.trailingAnchor.constraint(equalTo: backView.trailingAnchor ),
+            backViewSixItem.trailingAnchor.constraint(equalTo: self.trailingAnchor ),
             backViewSixItem.heightAnchor.constraint(equalToConstant: 150),
             backViewSixItem.widthAnchor.constraint(equalToConstant: 152),
             
