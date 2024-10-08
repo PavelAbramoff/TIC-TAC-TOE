@@ -11,6 +11,7 @@ import Foundation
 class SettingGameView: UIView {
     
     let defaults = UserDefaults.standard
+    var gameTimeDuration = 0
     
     private let backView: UIView = {
         let view = UIView()
@@ -41,9 +42,11 @@ class SettingGameView: UIView {
         return repeatSwitch
     }()
     
-    private lazy var gameTimeStackView = UIStackView(arrangedSubviews: [gameTimeLabel, repeatSwitch],
-                                                     axis: .horizontal,
-                                                     spacinng: 10)
+    private lazy var gameTimeStackView = UIStackView(
+        arrangedSubviews: [gameTimeLabel, repeatSwitch],
+        axis: .horizontal,
+        spacinng: 10
+    )
     
     private let durationTameBackView: UIView = {
         let view = UIView()
@@ -115,10 +118,11 @@ class SettingGameView: UIView {
         setConstraints()
         
         if let myValue = defaults.object(forKey: "GameTimeDuration") {
-            let gameTimeDuration = myValue
-            
-            selectNewTime(time: gameTimeDuration as! Int)
+            gameTimeDuration = myValue as! Int
         }
+        
+        setupDurationTimeBlock(show: gameTimeDuration != 0 ? true : false)
+        selectNewTime(time: gameTimeDuration )
     }
     
     required init?(coder: NSCoder) {
@@ -140,20 +144,10 @@ class SettingGameView: UIView {
     
     @objc func repateSwitchToggled() {
         if repeatSwitch.isOn {
+            setupDurationTimeBlock(show: true)
             selectNewTime(time: 60)
-            
-            UIView.animate(withDuration: 0.5, animations: {
-                self.firstTimeButton.alpha = 1
-                self.secondTimeButton.alpha = 1
-                self.thirdTimeButton.alpha = 1
-            })
         } else {
-            UIView.animate(withDuration: 0.5, animations: {
-                self.firstTimeButton.alpha = 0
-                self.secondTimeButton.alpha = 0
-                self.thirdTimeButton.alpha = 0
-            })
-            
+            setupDurationTimeBlock(show: false)
             defaults.set(0, forKey: "GameTimeDuration")
         }
     }
@@ -174,46 +168,45 @@ class SettingGameView: UIView {
         switch time {
         case 0:
             repeatSwitch.isOn = false
-            firstTimeButton.backgroundColor = .background
-            secondTimeButton.backgroundColor = .background
-            thirdTimeButton.backgroundColor = .background
-            firstTimeButton.alpha = 0
-            secondTimeButton.alpha = 0
-            thirdTimeButton.alpha = 0
         case 30:
             repeatSwitch.isOn = true
             firstTimeButton.backgroundColor = .purple
             secondTimeButton.backgroundColor = .background
             thirdTimeButton.backgroundColor = .background
-            firstTimeButton.alpha = 1
-            secondTimeButton.alpha = 1
-            thirdTimeButton.alpha = 1
         case 60:
             repeatSwitch.isOn = true
             firstTimeButton.backgroundColor = .background
             secondTimeButton.backgroundColor = .purple
             thirdTimeButton.backgroundColor = .background
-            firstTimeButton.alpha = 1
-            secondTimeButton.alpha = 1
-            thirdTimeButton.alpha = 1
         case 120:
             repeatSwitch.isOn = true
             firstTimeButton.backgroundColor = .background
             secondTimeButton.backgroundColor = .background
             thirdTimeButton.backgroundColor = .purple
-            firstTimeButton.alpha = 1
-            secondTimeButton.alpha = 1
-            thirdTimeButton.alpha = 1
         default:
             repeatSwitch.isOn = false
-            firstTimeButton.backgroundColor = .background
-            secondTimeButton.backgroundColor = .background
-            thirdTimeButton.backgroundColor = .background
-            firstTimeButton.alpha = 0
-            secondTimeButton.alpha = 0
-            thirdTimeButton.alpha = 0
         }
         
+    }
+    
+    func setupDurationTimeBlock(show: Bool) {
+        setConstraintsForBackViewBlock(durationShow: show)
+        
+        if show {
+            durationTameBackView.isHidden = false
+            durationLabel.isHidden = false
+            spaserView.isHidden = false
+            firstTimeButton.isHidden = false
+            secondTimeButton.isHidden = false
+            thirdTimeButton.isHidden = false
+        } else {
+            durationTameBackView.isHidden = true
+            durationLabel.isHidden = true
+            spaserView.isHidden = true
+            firstTimeButton.isHidden = true
+            secondTimeButton.isHidden = true
+            thirdTimeButton.isHidden = true
+        }
     }
 }
 
@@ -224,7 +217,7 @@ extension SettingGameView {
             backView.topAnchor.constraint(equalTo: topAnchor),
             backView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            backView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            backView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             gameTameBackView.topAnchor.constraint(equalTo: backView.topAnchor, constant: 20),
             gameTameBackView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
@@ -266,5 +259,17 @@ extension SettingGameView {
             thirdTimeButton.heightAnchor.constraint(equalToConstant: 50),
             
         ])
+    }
+    
+    private func setConstraintsForBackViewBlock(durationShow: Bool) {
+        if durationShow {
+            NSLayoutConstraint.activate([
+                backView.heightAnchor.constraint(equalToConstant: 336),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                backView.heightAnchor.constraint(equalToConstant: 80),
+            ])
+        }
     }
 }

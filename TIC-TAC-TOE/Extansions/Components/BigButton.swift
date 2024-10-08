@@ -18,7 +18,7 @@ class BigButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(text: String) {
+    convenience init(tag: Int) {
         self.init(type: .system)
         setTitle(text, for: .normal)
 //        self.backgroundColor = .purple
