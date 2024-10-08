@@ -21,7 +21,6 @@ class ChangeItems: UIView {
             self.secondImage = secondImage
         }
     }
-    
 
     let coversIconsList = [
         ["firstImage": "Xskin1", "secondImage": "Oskin1"],
@@ -33,7 +32,6 @@ class ChangeItems: UIView {
     ]
     
     // MARK: First Item
-    
     
     private let backView: UIView = {
         let view = UIView()
@@ -285,8 +283,6 @@ class ChangeItems: UIView {
             btn.isEnabled = true
             btn.addTarget(self, action: #selector(selectNewCover), for: .touchUpInside)
         }
-        
-        buttonSecondItem.addTarget(self, action: #selector(selectNewCover), for: .touchUpInside)
         
         translatesAutoresizingMaskIntoConstraints = false
     }
