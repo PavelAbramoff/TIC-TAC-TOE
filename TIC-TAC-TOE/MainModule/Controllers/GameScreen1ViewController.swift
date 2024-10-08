@@ -10,18 +10,31 @@ import UIKit
 
 final class GameScreen1ViewController: UIViewController {
     
+    var board = [Int](repeating: 0, count: 9)
+    private var currentPlayer = 1
+    private var timer: Timer?
+    private var totalSeconds: Int = 0
+    private var winningLine: CAShapeLayer? // Линия победы
+    // Победные комбинации
+    let winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Горизонтальные линии
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Вертикальные линии
+        [0, 4, 8], [2, 4, 6]              // Диагональные линии
+    ]
+    
     //MARK: - Dependencies
     let fontSize: CGFloat = 20
     let offset: CGFloat = 60
     let smallButtonSize: CGFloat = 40
     
+    
     // MARK: - UI Properties
-    private let backIcon: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = .backIcon
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    private lazy var backIcon: UIButton = {
+        let button = UIButton()
+        button.setImage(.backIcon, for: .normal)
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let youCell: UIImageView = {
@@ -42,10 +55,27 @@ final class GameScreen1ViewController: UIViewController {
     
     private let youLabel: UILabel = {
         let imageView = UILabel()
-        imageView.text = "You"
+        imageView.text = "Your"
+        imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.textAlignment = .center
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }()
+    
+    private let centerSeparatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let timerLabel: UILabel = {
+        let label = UILabel()
+        label.text = "00:00"
+        label.textAlignment = .center
+        label.font = UIFont.customBoldFont(size: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let player2Cell: UIImageView = {
@@ -67,9 +97,20 @@ final class GameScreen1ViewController: UIViewController {
     private let player2Label: UILabel = {
         let imageView = UILabel()
         imageView.text = "Player Two"
+        imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }()
+    
+    private let turnImage: UIImageView = {
+        let image = UIImageView()
+        image.image = .oskin1
+        image.contentMode = .scaleAspectFit
+        image.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 53).isActive = true
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
     }()
     
     private let turnLabel: UILabel = {
@@ -81,38 +122,66 @@ final class GameScreen1ViewController: UIViewController {
         return label
     }()
     
+    private let turnStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     private let stackBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue 
+        view.backgroundColor = UIColor.white
+        view.layer.cornerRadius = 30
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private let squareStackView: UIStackView = {
-        func createRow() -> UIStackView {
-            var squares = [UIImageView]()
-            for _ in 1...3 {
-                let square = UIImageView()
-                square.image = .cell
-                square.translatesAutoresizingMaskIntoConstraints = false
-                square.contentMode = .scaleAspectFit
-                square.widthAnchor.constraint(equalToConstant: 74).isActive = true
-                square.heightAnchor.constraint(equalToConstant: 74).isActive = true
-                squares.append(square)
+    private lazy var squareStackView: UIStackView = {
+        func createRow(_ at: Int, _ to: Int) -> UIStackView {
+            var buttons = [UIView]()
+            
+            for i in at...to {
+                let containerView = UIView()
+                containerView.layer.cornerRadius = 20
+                containerView.backgroundColor = .lightBlue
+                containerView.translatesAutoresizingMaskIntoConstraints = false
+                containerView.widthAnchor.constraint(equalToConstant: 74).isActive = true
+                containerView.heightAnchor.constraint(equalToConstant: 74).isActive = true
+                
+                let button = UIButton()
+                button.setBackgroundImage(.cell, for: .normal)
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.contentMode = .scaleAspectFit
+                button.tag = i // Индекс кнопки
+                button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+                containerView.addSubview(button)
+                
+                NSLayoutConstraint.activate([
+                    button.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+                    button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                    button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+                    button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10)
+                ])
+                
+                buttons.append(containerView)
             }
             
-            let rowStack = UIStackView(arrangedSubviews: squares)
+            let rowStack = UIStackView(arrangedSubviews: buttons)
             rowStack.axis = .horizontal
-            rowStack.spacing = 10
+            rowStack.spacing = 20
             rowStack.alignment = .center
             rowStack.distribution = .equalSpacing
             return rowStack
         }
         
         // Создаем три ряда ячеек
-        let stackView = UIStackView(arrangedSubviews: [createRow(), createRow(), createRow()])
+        let stackView = UIStackView(arrangedSubviews: [createRow(0, 2), createRow(3, 5), createRow(6, 8)])
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = 20
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -125,21 +194,46 @@ final class GameScreen1ViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
+        startTimer()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getTimeDuration()
+        timerLabel.text = formatTime(seconds: totalSeconds)
     }
     
     // MARK: - Private Methods
     private func setupUI() {
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor.background
         view.addSubview(backIcon)
         view.addSubview(youCell)
         view.addSubview(oskin)
         view.addSubview(youLabel)
+        view.addSubview(centerSeparatorView)
+        centerSeparatorView.addSubview(timerLabel)
         view.addSubview(player2Cell)
         view.addSubview(xskin)
         view.addSubview(player2Label)
-        view.addSubview(turnLabel)
+        view.addSubview(turnStackView)
+        turnStackView.addArrangedSubview(turnImage)
+        turnStackView.addArrangedSubview(turnLabel)
         view.addSubview(stackBackground)
         view.addSubview(squareStackView)
+    }
+    
+    @objc func backButtonTapped() {
+        dismiss(animated: true)
+    }
+    
+    private func updateTurnIndicator(numberOfUser: Int) {
+        if numberOfUser == 1 {
+            turnLabel.text = "Your Turn"
+            turnImage.image = .oskin1
+        } else {
+            turnLabel.text = "Player Two turn"
+            turnImage.image = .xskin1
+        }
     }
 }
 
@@ -315,7 +409,7 @@ extension GameScreen1ViewController {
 
 // MARK: - Setup Constraints
 private extension GameScreen1ViewController {
-     func setupConstraints() {
+    func setupConstraints() {
         NSLayoutConstraint.activate([
             backIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             backIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -331,11 +425,19 @@ private extension GameScreen1ViewController {
             oskin.leadingAnchor.constraint(equalTo: youCell.leadingAnchor, constant: 24),
             oskin.widthAnchor.constraint(equalToConstant: 54),
             oskin.heightAnchor.constraint(equalToConstant: 54),
-           
+            
             youLabel.topAnchor.constraint(equalTo: oskin.bottomAnchor, constant: 10),
             youLabel.centerXAnchor.constraint(equalTo: oskin.centerXAnchor),
             youLabel.widthAnchor.constraint(equalToConstant: 83),
             youLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            centerSeparatorView.topAnchor.constraint(equalTo: youCell.topAnchor),
+            centerSeparatorView.leadingAnchor.constraint(equalTo: youCell.trailingAnchor, constant: 10),
+            centerSeparatorView.trailingAnchor.constraint(equalTo: player2Cell.leadingAnchor, constant: -10),
+            centerSeparatorView.bottomAnchor.constraint(equalTo: youCell.bottomAnchor),
+            
+            timerLabel.centerXAnchor.constraint(equalTo: centerSeparatorView.centerXAnchor),
+            timerLabel.centerYAnchor.constraint(equalTo: centerSeparatorView.centerYAnchor),
             
             player2Cell.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 58),
             player2Cell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 265),
@@ -352,18 +454,16 @@ private extension GameScreen1ViewController {
             player2Label.widthAnchor.constraint(equalToConstant: 83),
             player2Label.heightAnchor.constraint(equalToConstant: 20),
             
-            turnLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 215),
-            turnLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            turnLabel.widthAnchor.constraint(equalToConstant: 94),
-            turnLabel.heightAnchor.constraint(equalToConstant: 24),
+            turnStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 215),
+            turnStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            stackBackground.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 315),
+            stackBackground.topAnchor.constraint(equalTo: turnLabel.bottomAnchor, constant: 44),
             stackBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackBackground.widthAnchor.constraint(equalToConstant: 300),
             stackBackground.heightAnchor.constraint(equalToConstant: 300),
-                        
+            
             squareStackView.centerXAnchor.constraint(equalTo: stackBackground.centerXAnchor),
             squareStackView.centerYAnchor.constraint(equalTo: stackBackground.centerYAnchor)
         ])
-     }
+    }
 }

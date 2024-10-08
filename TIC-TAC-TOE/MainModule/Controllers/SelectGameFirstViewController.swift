@@ -9,6 +9,7 @@ import UIKit
 
 class SelectGameFirstViewController: UIViewController {
     
+    private var game = LogikGame()
     private let selectGameView = SelectGame()
     
     private lazy var settingsButton: UIButton = {
@@ -36,20 +37,21 @@ class SelectGameFirstViewController: UIViewController {
         }
         
         print(settingsButtonTapped)
-        let vc = SettinfGameViewController()
+        let vc = SettingGameViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
     
     @objc func singlePlayerButtonTapped() {
         updateColorButtons(sender: selectGameView.singlePlayerButton)
-        
         print("singlePlayerButtonTapped")
     }
     
     @objc func twoPlayersButtonTapped() {
         updateColorButtons(sender: selectGameView.twoPlayersButton)
-        print("twoPlayersButtonTapped")
+        let vc = GameScreen1ViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     private func setupButtonTargets() {

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SettinfGameViewController: UIViewController {
+class SettingGameViewController: UIViewController {
     
     private lazy var returnButton = ReturnButton(type: .system)
     
@@ -27,13 +27,11 @@ class SettinfGameViewController: UIViewController {
     }
     
     @objc func returnToSelectGameScreen() {
-        let vc = SelectGameFirstViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
+        dismiss(animated: true)
     }
 }
 
-extension SettinfGameViewController {
+extension SettingGameViewController {
     private func setupViews() {
         view.backgroundColor = .background
         view.addSubview(returnButton)
