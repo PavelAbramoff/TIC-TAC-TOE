@@ -23,7 +23,7 @@ class ResultController: UIViewController {
         "draw": Result(image: #imageLiteral(resourceName: "Draw-Icon"), text: "Draw!"),
         "lose": Result(image: #imageLiteral(resourceName: "Lose-Icon"), text: "You Lose!")
     ] as [String: Result]
-    let resultId = "win" // TODO
+    var resultId = "win" // TODO
     
     // MARK: - UI
     
@@ -94,11 +94,15 @@ class ResultController: UIViewController {
     
     @objc func btnPlayAgainTapped() {
         // TODO
-        self.backBtn.backgroundColor = .background
+        self.playAgainBtn.backgroundColor = .background
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.backBtn.backgroundColor = .blue
+            self.playAgainBtn.backgroundColor = .blue
         }
+        
+        let vc = GameScreen1ViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func btnBackTapped() {

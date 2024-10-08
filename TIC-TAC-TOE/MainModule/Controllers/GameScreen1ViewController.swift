@@ -296,11 +296,25 @@ extension GameScreen1ViewController {
             drawWinningLine(for: combination)
             
         }
-        // добавить логику перехода на экран результата
         
-        //        let vc = ResultController()
-        //        vc.modalPresentationStyle = .fullScreen
-        //        present(vc, animated: true)
+        let vc = ResultController()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            switch winner {
+            case 0:
+                vc.resultId = "draw"
+            case 1:
+                vc.resultId = "win"
+            case 2:
+                vc.resultId = "lose"
+            default:
+                break
+            }
+            
+            vc.modalPresentationStyle = .fullScreen
+            self.onOffAllButtons(is: true)
+            self.present(vc, animated: true)
+        }
     }
     
     // MARK: Add Winn Line
@@ -354,13 +368,17 @@ extension GameScreen1ViewController {
         board = [Int](repeating: 0, count: 9)
         currentPlayer = 1
         stopTimer()
-        
-        // Получаем все кнопки из squareStackView
+        onOffAllButtons(is: true)
+    }
+    
+    // Отключение или включение взаимодействия с кнопками
+    func onOffAllButtons(is bool: Bool) {
         for subStack in squareStackView.arrangedSubviews {
             if let rowStack = subStack as? UIStackView {
-                for subview in rowStack.arrangedSubviews {
-                    if let button = subview as? UIButton {
-                        button.setBackgroundImage(.cell, for: .normal)
+                for containerView in rowStack.arrangedSubviews {
+                    // Здесь containerView — это UIView, содержащий кнопку
+                    if let button = containerView.subviews.first(where: { $0 is UIButton }) as? UIButton {
+                        button.isUserInteractionEnabled = bool
                     }
                 }
             }
@@ -391,13 +409,17 @@ extension GameScreen1ViewController {
             
         } else {
             stopTimer()
-            // Сделать переход на проигрыш из-за истечения времени
+            let vc = ResultController()
+            vc.resultId = "draw"
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: true)
         }
     }
     
     private func stopTimer() {
         timer?.invalidate() // Остановка таймера по истечению времени
         timer = nil
+        onOffAllButtons(is: false)
     }
     
     private func formatTime(seconds: Int) -> String {
