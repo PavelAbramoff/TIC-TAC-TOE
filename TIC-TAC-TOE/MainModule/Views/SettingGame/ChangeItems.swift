@@ -9,7 +9,31 @@ import UIKit
 
 class ChangeItems: UIView {
     
+    let defaults = UserDefaults.standard
+    var gameCoverTypeIndex = 0
+    
+    struct CoverIcons {
+        let firstImage: UIImage
+        let secondImage: UIImage
+        
+        init(firstImage: UIImage, secondImage: UIImage) {
+            self.firstImage = firstImage
+            self.secondImage = secondImage
+        }
+    }
+    
+
+    let coversIconsList = [
+        ["firstImage": "Xskin1", "secondImage": "Oskin1"],
+        ["firstImage": "Xskin4", "secondImage": "Oskin4"],
+        ["firstImage": "Xskin3", "secondImage": "Xskin3"],
+        ["firstImage": "Xskin5", "secondImage": "Xskin5"],
+        ["firstImage": "Xskin6", "secondImage": "Xskin6"],
+        ["firstImage": "Isolation_Mode", "secondImage": "Xskin6"]
+    ]
+    
     // MARK: First Item
+    
     
     private let backView: UIView = {
         let view = UIView()
@@ -45,7 +69,7 @@ class ChangeItems: UIView {
         return imageView
     }()
     
-    private let button = BigButton(text: "Picked")
+    private let button = BigButton(tag: 0)
     
     // MARK: Second Item
     
@@ -75,7 +99,7 @@ class ChangeItems: UIView {
         return imageView
     }()
     
-    private let buttonSecondItem = BigButton(text: "Choose")
+    private let buttonSecondItem = BigButton(tag: 1)
     
     // MARK: Third Item
     
@@ -105,7 +129,7 @@ class ChangeItems: UIView {
         return imageView
     }()
     
-    private let buttonThirdItem = BigButton(text: "Choose")
+    private let buttonThirdItem = BigButton(tag: 2)
     
     // MARK: For Item
     
@@ -135,7 +159,7 @@ class ChangeItems: UIView {
         return imageView
     }()
     
-    private let buttonForItem = BigButton(text: "Choose")
+    private let buttonForItem = BigButton(tag: 3)
     
     // MARK: Five Item
     
@@ -165,7 +189,7 @@ class ChangeItems: UIView {
         return imageView
     }()
     
-    private let buttonFiveItem = BigButton(text: "Choose")
+    private let buttonFiveItem = BigButton(tag: 4)
     
     // MARK: Six Item
     
@@ -195,13 +219,21 @@ class ChangeItems: UIView {
         return imageView
     }()
     
-    private let buttonSixItem = BigButton(text: "Choose")
+    private let buttonSixItem = BigButton(tag: 5)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setupView()
         setConstraints()
+        
+        if let myValue = defaults.object(forKey: "GameCoverTypeIndex") {
+            gameCoverTypeIndex = myValue as! Int
+            
+            print("gameCoverTypeIndex \(gameCoverTypeIndex)")
+        }
+        
+        setCover(index: gameCoverTypeIndex)
     }
     
     required init?(coder: NSCoder) {
@@ -242,7 +274,57 @@ class ChangeItems: UIView {
         addSubview(zeroImageViewSixItem)
         addSubview(buttonSixItem)
         
+        for btn in [
+            button,
+            buttonSecondItem,
+            buttonThirdItem,
+            buttonForItem,
+            buttonFiveItem,
+            buttonSixItem
+        ] {
+            btn.isEnabled = true
+            btn.addTarget(self, action: #selector(selectNewCover), for: .touchUpInside)
+        }
+        
+        buttonSecondItem.addTarget(self, action: #selector(selectNewCover), for: .touchUpInside)
+        
         translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    @objc func selectNewCover(btn: UIButton) {
+        let index = btn.tag
+        
+        print("selectNewCover \(index)")
+        
+        setCover(index: index)
+    }
+    
+    func setCover(index: Int) {
+        let coverType = coversIconsList[index]
+    
+        defaults.set(index, forKey: "GameCoverTypeIndex")
+        defaults.set(coverType, forKey: "GameCoverIcons")
+
+        let buttonsList = [
+            button,
+            buttonSecondItem,
+            buttonThirdItem,
+            buttonForItem,
+            buttonFiveItem,
+            buttonSixItem,
+         ]
+        
+        for btnEl in buttonsList {
+            if btnEl.tag == index {
+                btnEl.setTitle("Picked", for: .normal)
+                btnEl.backgroundColor = .blue
+                btnEl.tintColor = .white
+            } else {
+                btnEl.setTitle("Choose", for: .normal)
+                btnEl.backgroundColor = .background
+                btnEl.tintColor = .black
+            }
+        }
     }
 }
 

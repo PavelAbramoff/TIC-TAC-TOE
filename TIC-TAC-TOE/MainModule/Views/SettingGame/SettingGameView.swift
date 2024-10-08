@@ -11,6 +11,7 @@ import Foundation
 class SettingGameView: UIView {
     
     let defaults = UserDefaults.standard
+    var gameTimeDuration = 0
     
     private let backView: UIView = {
         let view = UIView()
@@ -41,9 +42,11 @@ class SettingGameView: UIView {
         return repeatSwitch
     }()
     
-    private lazy var gameTimeStackView = UIStackView(arrangedSubviews: [gameTimeLabel, repeatSwitch],
-                                                     axis: .horizontal,
-                                                     spacinng: 10)
+    private lazy var gameTimeStackView = UIStackView(
+        arrangedSubviews: [gameTimeLabel, repeatSwitch],
+        axis: .horizontal,
+        spacinng: 10
+    )
     
     private let durationTameBackView: UIView = {
         let view = UIView()
@@ -115,10 +118,10 @@ class SettingGameView: UIView {
         setConstraints()
         
         if let myValue = defaults.object(forKey: "GameTimeDuration") {
-            let gameTimeDuration = myValue
-            
-            selectNewTime(time: gameTimeDuration as! Int)
+            gameTimeDuration = myValue as! Int
         }
+        
+        selectNewTime(time: gameTimeDuration )
     }
     
     required init?(coder: NSCoder) {

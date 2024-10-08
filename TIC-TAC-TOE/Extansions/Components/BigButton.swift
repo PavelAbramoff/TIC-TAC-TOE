@@ -18,22 +18,17 @@ class BigButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(text: String) {
+    convenience init(tag: Int) {
         self.init(type: .system)
-        setTitle(text, for: .normal)
-//        self.backgroundColor = .purple
-        configuure(text: text)
+//        setTitle(text, for: .normal)
+        configuure(tag: tag)
     }
     
-    private func configuure(text: String) {
-        if text == "Picked" {
-            backgroundColor = .blue
-            tintColor = .white
-        } else {
-            backgroundColor = .background
-            tintColor = .black
-        }
+    private func configuure(tag: Int) {
+        backgroundColor = .background
+        tintColor = .black
         
+        self.tag = tag
         layer.cornerRadius = 20
         titleLabel?.font = .boldSystemFont(ofSize: 15)
         translatesAutoresizingMaskIntoConstraints = false
