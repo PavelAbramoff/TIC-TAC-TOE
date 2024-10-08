@@ -14,6 +14,7 @@ final class GameScreen1ViewController: UIViewController {
     private var currentPlayer = 1
     private var timer: Timer?
     private var totalSeconds: Int = 0
+    private var winningLine: CAShapeLayer? // Линия победы
     // Победные комбинации
     let winningCombinations = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Горизонтальные линии
@@ -233,10 +234,9 @@ final class GameScreen1ViewController: UIViewController {
             turnLabel.text = "Player Two turn"
             turnImage.image = .xskin1
         }
-        
     }
-    
 }
+
 // MARK: Logic Game
 extension GameScreen1ViewController {
     @objc func buttonTapped(sender: UIButton) {
@@ -286,15 +286,66 @@ extension GameScreen1ViewController {
         return nil
     }
     
-// MARK: - WINNER
+    // MARK: - WINNER
     private func showWinner(winner: Int) {
         // 0 - Ничья, 1 - Победа крестики, 2 - Победа нолик
         print("Победитель - \(winner)")
         stopTimer()
         
-//        let vc = ResultController()
-//        vc.modalPresentationStyle = .fullScreen
-//        present(vc, animated: true)
+        if let combination = winningCombinations.first(where: { checkCombination($0) == winner }) {
+            drawWinningLine(for: combination)
+            
+        }
+        // добавить логику перехода на экран результата
+        
+        //        let vc = ResultController()
+        //        vc.modalPresentationStyle = .fullScreen
+        //        present(vc, animated: true)
+    }
+    
+    private func checkCombination(_ combination: [Int]) -> Int? {
+        let (a, b, c) = (board[combination[0]], board[combination[1]], board[combination[2]])
+        if a != 0 && a == b && b == c {
+            return a
+        }
+        return nil
+    }
+    
+    private func getCenterPoint(for index: Int) -> CGPoint {
+        // Расчет позиции ячейки на экране
+        let row = index / 3
+        let column = index % 3
+        
+        // Размеры ячейки
+        let buttonSize: CGFloat = 74 // Размер кнопки
+        let spacing: CGFloat = 20     // Промежуток между ячейками
+        
+        // Начальная точка
+        let startX = (CGFloat(column) * (buttonSize + spacing)) + (buttonSize / 2) + 70 // Центр ячейки по X
+        let startY = (CGFloat(row) * (buttonSize + spacing)) + (buttonSize / 2) + 380 // Центр ячейки по Y
+        
+        return CGPoint(x: startX, y: startY)
+    }
+    
+    private func drawWinningLine(for combination: [Int]) {
+        // Удаляем предыдущую линию, если она есть
+        winningLine?.removeFromSuperlayer()
+        
+        // Получаем координаты для линии
+        let startPoint = getCenterPoint(for: combination[0])
+        let endPoint = getCenterPoint(for: combination[2]) // используем конечную точку линии
+        
+        let path = UIBezierPath()
+        path.move(to: startPoint)
+        path.addLine(to: endPoint)
+        
+        winningLine = CAShapeLayer()
+        winningLine?.path = path.cgPath
+        winningLine?.strokeColor = UIColor.purple.cgColor
+        winningLine?.lineWidth = 14
+        winningLine?.fillColor = UIColor.clear.cgColor
+        
+        view.layer.addSublayer(winningLine!)
     }
     
     // Сбрасываем игру
@@ -357,7 +408,7 @@ extension GameScreen1ViewController {
 
 // MARK: - Setup Constraints
 private extension GameScreen1ViewController {
-     func setupConstraints() {
+    func setupConstraints() {
         NSLayoutConstraint.activate([
             backIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             backIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -373,7 +424,7 @@ private extension GameScreen1ViewController {
             oskin.leadingAnchor.constraint(equalTo: youCell.leadingAnchor, constant: 24),
             oskin.widthAnchor.constraint(equalToConstant: 54),
             oskin.heightAnchor.constraint(equalToConstant: 54),
-           
+            
             youLabel.topAnchor.constraint(equalTo: oskin.bottomAnchor, constant: 10),
             youLabel.centerXAnchor.constraint(equalTo: oskin.centerXAnchor),
             youLabel.widthAnchor.constraint(equalToConstant: 83),
@@ -409,9 +460,9 @@ private extension GameScreen1ViewController {
             stackBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackBackground.widthAnchor.constraint(equalToConstant: 300),
             stackBackground.heightAnchor.constraint(equalToConstant: 300),
-                        
+            
             squareStackView.centerXAnchor.constraint(equalTo: stackBackground.centerXAnchor),
             squareStackView.centerYAnchor.constraint(equalTo: stackBackground.centerYAnchor)
         ])
-     }
+    }
 }
