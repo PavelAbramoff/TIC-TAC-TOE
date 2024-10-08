@@ -23,7 +23,7 @@ class ResultController: UIViewController {
         "draw": Result(image: #imageLiteral(resourceName: "Draw-Icon"), text: "Draw!"),
         "lose": Result(image: #imageLiteral(resourceName: "Lose-Icon"), text: "You Lose!")
     ] as [String: Result]
-    let resultId = "win" // TODO
+    var resultId = "win" // TODO
     
     // MARK: - UI
     
