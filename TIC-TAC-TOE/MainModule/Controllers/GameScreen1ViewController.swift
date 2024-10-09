@@ -396,7 +396,7 @@ extension GameScreen1ViewController {
         if gameTimeDuration > 0 {
             totalSeconds = gameTimeDuration
         } else {
-            totalSeconds = 999999
+            totalSeconds = 888888
             timerLabel.isHidden = true
         }
     }
