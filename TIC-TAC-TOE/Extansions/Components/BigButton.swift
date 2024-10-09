@@ -9,6 +9,8 @@ import UIKit
 
 class BigButton: UIButton {
     
+    var text = ""
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
