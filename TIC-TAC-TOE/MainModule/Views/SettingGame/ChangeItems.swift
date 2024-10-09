@@ -9,7 +9,7 @@ import UIKit
 
 class ChangeItems: UIView {
     
-    // MARK: First Item
+    var buttons: [UIButton] = []
     
     private let firstbackView: UIView = {
         let view = UIView()
@@ -185,13 +185,23 @@ class ChangeItems: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupView()
         setConstraints()
+        addButtonInArray()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func addButtonInArray() {
+        buttons.append(button)
+        buttons.append(buttonSecondItem)
+        buttons.append(buttonThirdItem)
+        buttons.append(buttonForItem)
+        buttons.append(buttonFiveItem)
+        buttons.append(buttonSixItem)
+        
     }
     
     private func setupView() {
