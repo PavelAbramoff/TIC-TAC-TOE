@@ -304,9 +304,9 @@ extension GameScreen1ViewController {
             case 0:
                 vc.resultId = "draw"
             case 1:
-                vc.resultId = "win"
-            case 2:
                 vc.resultId = "lose"
+            case 2:
+                vc.resultId = "win"
             default:
                 break
             }
@@ -395,6 +395,9 @@ extension GameScreen1ViewController {
         }
         if gameTimeDuration > 0 {
             totalSeconds = gameTimeDuration
+        } else {
+            totalSeconds = 999999
+            timerLabel.isHidden = true
         }
     }
     
