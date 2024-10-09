@@ -8,6 +8,30 @@
 import UIKit
 
 class ChangeItems: UIView {
+    let defaults = UserDefaults.standard
+      var gameCoverTypeIndex = 0
+      
+      struct CoverIcons {
+          let firstImage: UIImage
+          let secondImage: UIImage
+          
+          init(firstImage: UIImage, secondImage: UIImage) {
+              self.firstImage = firstImage
+              self.secondImage = secondImage
+          }
+      }
+
+      let coversIconsList = [
+          ["firstImage": "Xskin1", "secondImage": "Oskin1"],
+          ["firstImage": "Xskin4", "secondImage": "Oskin4"],
+          ["firstImage": "Xskin3", "secondImage": "Xskin3"],
+          ["firstImage": "Xskin5", "secondImage": "Xskin5"],
+          ["firstImage": "Xskin6", "secondImage": "Xskin6"],
+          ["firstImage": "Isolation_Mode", "secondImage": "Xskin6"]
+      ]
+      
+      // MARK: First Item
+
     
     var buttons: [UIButton] = []
     
@@ -187,6 +211,13 @@ class ChangeItems: UIView {
         super.init(frame: frame)
         setupView()
         setConstraints()
+        if let myValue = defaults.object(forKey: "GameCoverTypeIndex") {
+              gameCoverTypeIndex = myValue as! Int
+              
+              print("gameCoverTypeIndex \(gameCoverTypeIndex)")
+          }
+          
+          setCover(index: gameCoverTypeIndex)
         addButtonInArray()
     }
     
