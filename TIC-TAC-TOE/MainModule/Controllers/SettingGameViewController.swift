@@ -24,10 +24,22 @@ class SettingGameViewController: UIViewController {
         
         setupViews()
         setConstraints()
+        addTargetButtonsItem()
     }
     
     @objc func returnToSelectGameScreen() {
         dismiss(animated: true)
+    }
+    
+    private func addTargetButtonsItem() {
+        for button in items.buttons {
+            button.addTarget(self, action: #selector(itemButtonTapped), for: .touchUpInside)
+            view.bringSubviewToFront(button)
+        }
+    }
+    
+    @objc func itemButtonTapped(sender: UIButton) {
+        print("tapped")
     }
 }
 
@@ -43,6 +55,7 @@ extension SettingGameViewController {
         containerView.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(items)
+        
         returnButton.addTarget(self, action: #selector(returnToSelectGameScreen), for: .touchUpInside)
     }
     
