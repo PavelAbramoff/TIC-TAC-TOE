@@ -35,8 +35,9 @@ extension SettingGameViewController {
     private func setupViews() {
         view.backgroundColor = .background
         view.addSubview(returnButton)
-        view.addSubview(gameTimeView)
         view.addSubview(containerView)
+        view.addSubview(gameTimeView)
+        //view.addSubview(containerView)
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(scrollView)
@@ -58,10 +59,10 @@ extension SettingGameViewController {
             gameTimeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -21),
             gameTimeView.heightAnchor.constraint(equalToConstant: 339),
             
-            containerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 460),
+            containerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 260),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 600),
+            containerView.heightAnchor.constraint(equalToConstant: 800),
             
             scrollView.topAnchor.constraint(equalTo: containerView.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
