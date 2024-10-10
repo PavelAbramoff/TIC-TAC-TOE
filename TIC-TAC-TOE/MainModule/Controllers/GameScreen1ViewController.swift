@@ -21,6 +21,7 @@ final class GameScreen1ViewController: UIViewController {
         [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Вертикальные линии
         [0, 4, 8], [2, 4, 6]              // Диагональные линии
     ]
+    var singlePlayers: Bool = true
     
     //MARK: - Dependencies
     let fontSize: CGFloat = 20
@@ -55,7 +56,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let youLabel: UILabel = {
         let imageView = UILabel()
-        imageView.text = "Your"
+//        imageView.text = "Your"
         imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.textAlignment = .center
@@ -96,7 +97,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let player2Label: UILabel = {
         let imageView = UILabel()
-        imageView.text = "Player Two"
+//        imageView.text = "Player Two"
         imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -105,7 +106,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let turnImage: UIImageView = {
         let image = UIImageView()
-        image.image = .oskin1
+        image.image = .xskin1
         image.contentMode = .scaleAspectFit
         image.widthAnchor.constraint(equalToConstant: 54).isActive = true
         image.heightAnchor.constraint(equalToConstant: 53).isActive = true
@@ -115,7 +116,6 @@ final class GameScreen1ViewController: UIViewController {
     
     private let turnLabel: UILabel = {
         let label = UILabel()
-        label.text = "Your turn"
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.contentMode = .scaleAspectFit
@@ -206,14 +206,18 @@ final class GameScreen1ViewController: UIViewController {
     // MARK: - Private Methods
     private func setupUI() {
         view.backgroundColor = UIColor.background
+        youLabel.text = singlePlayers ? "Your" : "Player One"
+        player2Label.text = singlePlayers ? "Computer" : "Player Two"
+        turnLabel.text = singlePlayers ? "Your turn" : "Player One turn"
+        
         view.addSubview(backIcon)
         view.addSubview(youCell)
-        view.addSubview(oskin)
+        view.addSubview(xskin)
         view.addSubview(youLabel)
         view.addSubview(centerSeparatorView)
         centerSeparatorView.addSubview(timerLabel)
         view.addSubview(player2Cell)
-        view.addSubview(xskin)
+        view.addSubview(oskin)
         view.addSubview(player2Label)
         view.addSubview(turnStackView)
         turnStackView.addArrangedSubview(turnImage)
@@ -228,11 +232,11 @@ final class GameScreen1ViewController: UIViewController {
     
     private func updateTurnIndicator(numberOfUser: Int) {
         if numberOfUser == 1 {
-            turnLabel.text = "Your Turn"
-            turnImage.image = .oskin1
-        } else {
-            turnLabel.text = "Player Two turn"
+            turnLabel.text = singlePlayers ? "Your Turn" : "Player One turn"
             turnImage.image = .xskin1
+        } else {
+            turnLabel.text = singlePlayers ? "Computer turn" : "Player Two turn"
+            turnImage.image = .oskin1
         }
     }
 }
@@ -248,11 +252,13 @@ extension GameScreen1ViewController {
             if currentPlayer == 1 {
                 sender.setBackgroundImage(UIImage(named: "Xskin1"), for: .normal)
                 board[index] = 1
-                updateTurnIndicator(numberOfUser: currentPlayer)
+                updateTurnIndicator(numberOfUser: 2)
             } else {
-                sender.setBackgroundImage(UIImage(named: "Oskin1"), for: .normal)
-                board[index] = 2
-                updateTurnIndicator(numberOfUser: currentPlayer)
+                if !singlePlayers {
+                    sender.setBackgroundImage(UIImage(named: "Oskin1"), for: .normal)
+                    board[index] = 2
+                    updateTurnIndicator(numberOfUser: 1)
+                }
             }
             
             // Проверяем, есть ли победитель
@@ -261,18 +267,50 @@ extension GameScreen1ViewController {
             } else if board.allSatisfy({ $0 != 0 }) {
                 // Если все клетки заполнены, и нет победителя — ничья
                 showWinner(winner: 0)
+            } else {
+                // Переключаем игрока
+                currentPlayer = currentPlayer == 1 ? 2 : 1
+                
+                if singlePlayers {
+                    updateTurnIndicator(numberOfUser: currentPlayer)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.makeComputerStep()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func makeComputerStep() {
+        resursivelyMakeStep()
+        
+        if let winner = checkForWinner() {
+            showWinner(winner: winner)
+        } else if board.allSatisfy({ $0 != 0 }) {
+            // Если все клетки заполнены, и нет победителя — ничья
+            showWinner(winner: 0)
+        } else {
+            currentPlayer = 1
+        }
+    }
+    
+    private func resursivelyMakeStep() {
+        let index = Int.random(in: 0...8)
+        
+        if board[index] == 0 {
+            //нужно как-то вызвать нужную кнопку
+            
+            if let buttonByTag = self.view.viewWithTag(index) as? UIButton {
+                //Your code
+                buttonByTag.setBackgroundImage(UIImage(named: "Oskin1"), for: .normal)
+                board[index] = 2
+                updateTurnIndicator(numberOfUser: 1)
             }
             
-            // Переключаем игрока
-            currentPlayer = currentPlayer == 1 ? 2 : 1
+        } else {
+            resursivelyMakeStep()
         }
-        var printString: String = " "
-        for i in board {
-            
-            printString += String(i)
-            
-        }
-        print(printString)
     }
     
     // Проверяем, есть ли победитель
@@ -304,9 +342,9 @@ extension GameScreen1ViewController {
             case 0:
                 vc.resultId = "draw"
             case 1:
-                vc.resultId = "lose"
+                vc.resultId = self.singlePlayers ? "win" : "playerOneWin"
             case 2:
-                vc.resultId = "win"
+                vc.resultId = self.singlePlayers ? "lose" : "playerTwoWin"
             default:
                 break
             }
@@ -446,13 +484,13 @@ private extension GameScreen1ViewController {
             youCell.widthAnchor.constraint(equalToConstant: 103),
             youCell.heightAnchor.constraint(equalToConstant: 103),
             
-            oskin.topAnchor.constraint(equalTo: youCell.topAnchor, constant: 10),
-            oskin.leadingAnchor.constraint(equalTo: youCell.leadingAnchor, constant: 24),
-            oskin.widthAnchor.constraint(equalToConstant: 54),
-            oskin.heightAnchor.constraint(equalToConstant: 54),
+            xskin.topAnchor.constraint(equalTo: youCell.topAnchor, constant: 10),
+            xskin.leadingAnchor.constraint(equalTo: youCell.leadingAnchor, constant: 24),
+            xskin.widthAnchor.constraint(equalToConstant: 54),
+            xskin.heightAnchor.constraint(equalToConstant: 54),
             
-            youLabel.topAnchor.constraint(equalTo: oskin.bottomAnchor, constant: 10),
-            youLabel.centerXAnchor.constraint(equalTo: oskin.centerXAnchor),
+            youLabel.topAnchor.constraint(equalTo: xskin.bottomAnchor, constant: 10),
+            youLabel.centerXAnchor.constraint(equalTo: xskin.centerXAnchor),
             youLabel.widthAnchor.constraint(equalToConstant: 83),
             youLabel.heightAnchor.constraint(equalToConstant: 20),
             
@@ -469,12 +507,12 @@ private extension GameScreen1ViewController {
             player2Cell.widthAnchor.constraint(equalToConstant: 103),
             player2Cell.heightAnchor.constraint(equalToConstant: 103),
             
-            xskin.topAnchor.constraint(equalTo: player2Cell.topAnchor, constant: 10),
-            xskin.leadingAnchor.constraint(equalTo: player2Cell.leadingAnchor, constant: 24),
-            xskin.widthAnchor.constraint(equalToConstant: 54),
-            xskin.heightAnchor.constraint(equalToConstant: 54),
+            oskin.topAnchor.constraint(equalTo: player2Cell.topAnchor, constant: 10),
+            oskin.leadingAnchor.constraint(equalTo: player2Cell.leadingAnchor, constant: 24),
+            oskin.widthAnchor.constraint(equalToConstant: 54),
+            oskin.heightAnchor.constraint(equalToConstant: 54),
             
-            player2Label.topAnchor.constraint(equalTo: xskin.bottomAnchor, constant: 10),
+            player2Label.topAnchor.constraint(equalTo: oskin.bottomAnchor, constant: 10),
             player2Label.leadingAnchor.constraint(equalTo: player2Cell.leadingAnchor, constant: 10),
             player2Label.widthAnchor.constraint(equalToConstant: 83),
             player2Label.heightAnchor.constraint(equalToConstant: 20),

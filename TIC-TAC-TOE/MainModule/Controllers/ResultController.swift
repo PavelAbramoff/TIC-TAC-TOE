@@ -19,8 +19,10 @@ class ResultController: UIViewController {
     }
     
     let resultList = [
-        "win": Result(image: #imageLiteral(resourceName: "Win-Icon"), text: "Player One win!"),
+        "playerOneWin": Result(image: #imageLiteral(resourceName: "Win-Icon"), text: "Player One win!"),
+        "playerTwoWin": Result(image: #imageLiteral(resourceName: "Win-Icon"), text: "Player Two win!"),
         "draw": Result(image: #imageLiteral(resourceName: "Draw-Icon"), text: "Draw!"),
+        "win": Result(image: #imageLiteral(resourceName: "Win-Icon"), text: "You win!"),
         "lose": Result(image: #imageLiteral(resourceName: "Lose-Icon"), text: "You Lose!")
     ] as [String: Result]
     var resultId = "win" // TODO
