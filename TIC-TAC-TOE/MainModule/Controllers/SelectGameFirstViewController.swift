@@ -44,12 +44,16 @@ class SelectGameFirstViewController: UIViewController {
     
     @objc func singlePlayerButtonTapped() {
         updateColorButtons(sender: selectGameView.singlePlayerButton)
-        print("singlePlayerButtonTapped")
+        let vc = GameScreen1ViewController()
+        vc.singlePlayers = true
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true, completion: nil)
     }
     
     @objc func twoPlayersButtonTapped() {
         updateColorButtons(sender: selectGameView.twoPlayersButton)
         let vc = GameScreen1ViewController()
+        vc.singlePlayers = false
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
