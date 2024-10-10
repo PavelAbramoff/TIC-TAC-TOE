@@ -10,6 +10,9 @@ import UIKit
 
 final class GameScreen1ViewController: UIViewController {
     
+    private let defaults = UserDefaults.standard
+    private var firstCoverIcon: String = "Xskin1"
+    private var secondCoverIcon: String = "Oskin1"
     var board = [Int](repeating: 0, count: 9)
     private var currentPlayer = 1
     private var timer: Timer?
@@ -48,7 +51,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let oskin: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = .oskin1
+//        imageView.image = .oskin1
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -89,7 +92,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let xskin: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = .xskin1
+//        imageView.image = .xskin1
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -106,7 +109,7 @@ final class GameScreen1ViewController: UIViewController {
     
     private let turnImage: UIImageView = {
         let image = UIImageView()
-        image.image = .xskin1
+//        image.image = .xskin1
         image.contentMode = .scaleAspectFit
         image.widthAnchor.constraint(equalToConstant: 54).isActive = true
         image.heightAnchor.constraint(equalToConstant: 53).isActive = true
@@ -193,6 +196,7 @@ final class GameScreen1ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupCoversIcons()
         setupConstraints()
         startTimer()
     }
@@ -226,6 +230,23 @@ final class GameScreen1ViewController: UIViewController {
         view.addSubview(squareStackView)
     }
     
+    private func setupCoversIcons() {
+        if let firstImage = defaults.object(forKey: "GameCoverFirstIcon") {
+            firstCoverIcon = firstImage as! String
+            print("firstCoverIcon \(firstImage)")
+        }
+        
+        xskin.image = UIImage(named: firstCoverIcon)
+        turnImage.image = UIImage(named: firstCoverIcon)
+        
+        if let secondImage = defaults.object(forKey: "GameCoverSecondIcon") {
+            secondCoverIcon = secondImage as! String
+            print("secondCoverIcon \(secondImage)")
+        }
+        
+        oskin.image = UIImage(named: secondCoverIcon)
+    }
+    
     @objc func backButtonTapped() {
         dismiss(animated: true)
     }
@@ -233,10 +254,12 @@ final class GameScreen1ViewController: UIViewController {
     private func updateTurnIndicator(numberOfUser: Int) {
         if numberOfUser == 1 {
             turnLabel.text = singlePlayers ? "Your Turn" : "Player One turn"
-            turnImage.image = .xskin1
+//            turnImage.image = .xskin1
+            turnImage.image = UIImage(named: firstCoverIcon)
         } else {
             turnLabel.text = singlePlayers ? "Computer turn" : "Player Two turn"
-            turnImage.image = .oskin1
+//            turnImage.image = .oskin1
+            turnImage.image = UIImage(named: secondCoverIcon)
         }
     }
 }
@@ -250,12 +273,12 @@ extension GameScreen1ViewController {
         if board[index] == 0 {
             // Заполняем клетку в зависимости от текущего игрока
             if currentPlayer == 1 {
-                sender.setBackgroundImage(UIImage(named: "Xskin1"), for: .normal)
+                sender.setBackgroundImage(UIImage(named: firstCoverIcon), for: .normal)
                 board[index] = 1
                 updateTurnIndicator(numberOfUser: 2)
             } else {
                 if !singlePlayers {
-                    sender.setBackgroundImage(UIImage(named: "Oskin1"), for: .normal)
+                    sender.setBackgroundImage(UIImage(named: secondCoverIcon), for: .normal)
                     board[index] = 2
                     updateTurnIndicator(numberOfUser: 1)
                 }
@@ -274,7 +297,7 @@ extension GameScreen1ViewController {
                 if singlePlayers {
                     updateTurnIndicator(numberOfUser: currentPlayer)
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.makeComputerStep()
                     }
                 }
@@ -303,7 +326,7 @@ extension GameScreen1ViewController {
             
             if let buttonByTag = self.view.viewWithTag(index) as? UIButton {
                 //Your code
-                buttonByTag.setBackgroundImage(UIImage(named: "Oskin1"), for: .normal)
+                buttonByTag.setBackgroundImage(UIImage(named: secondCoverIcon), for: .normal)
                 board[index] = 2
                 updateTurnIndicator(numberOfUser: 1)
             }

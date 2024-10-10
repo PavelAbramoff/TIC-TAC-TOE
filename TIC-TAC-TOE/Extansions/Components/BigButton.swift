@@ -9,8 +9,6 @@ import UIKit
 
 class BigButton: UIButton {
     
-    var text = ""
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -22,19 +20,13 @@ class BigButton: UIButton {
     
     convenience init(tag: Int) {
         self.init(type: .system)
-        setTitle(text, for: .normal)
-//        self.backgroundColor = .purple
-        configuure(text: text)
+        configuure(tag: tag)
     }
     
-    private func configuure(text: String) {
-        if text == "Picked" {
-            backgroundColor = .blue
-            tintColor = .white
-        } else {
-            backgroundColor = .background
-            tintColor = .black
-        }
+    private func configuure(tag: Int) {
+        backgroundColor = .background
+        tintColor = .black
+        self.tag = tag
         
         layer.cornerRadius = 20
         titleLabel?.font = .boldSystemFont(ofSize: 15)
