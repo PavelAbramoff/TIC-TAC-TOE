@@ -69,7 +69,7 @@ class SettingGameView: UIView {
     
     private lazy var firstTimeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("30 min", for: .normal)
+        button.setTitle("30 sec", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
@@ -84,7 +84,7 @@ class SettingGameView: UIView {
     private lazy var secondTimeButton: UIButton = {
         let button = UIButton(type: .system)
 //        button.backgroundColor = .purple
-        button.setTitle("60 min", for: .normal)
+        button.setTitle("60 sec", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
@@ -98,7 +98,7 @@ class SettingGameView: UIView {
     
     private lazy var thirdTimeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("120 min", for: .normal)
+        button.setTitle("120 sec", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
