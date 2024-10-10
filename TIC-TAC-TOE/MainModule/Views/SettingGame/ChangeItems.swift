@@ -8,7 +8,7 @@
 import UIKit
 
 class ChangeItems: UIView {
-    let defaults = UserDefaults.standard
+    private let defaults = UserDefaults.standard
       var gameCoverTypeIndex = 0
       
       struct CoverIcons {
@@ -22,12 +22,12 @@ class ChangeItems: UIView {
       }
 
       let coversIconsList = [
-          ["firstImage": "Xskin1", "secondImage": "Oskin1"],
-          ["firstImage": "Xskin4", "secondImage": "Oskin4"],
-          ["firstImage": "Xskin3", "secondImage": "Xskin3"],
-          ["firstImage": "Xskin5", "secondImage": "Xskin5"],
-          ["firstImage": "Xskin6", "secondImage": "Xskin6"],
-          ["firstImage": "Isolation_Mode", "secondImage": "Xskin6"]
+          ["Xskin1", "Oskin1"],
+          ["Xskin4", "Oskin4"],
+          ["Xskin3", "Oskin3"],
+          ["Xskin5", "Oskin5"],
+          ["Xskin6", "Oskin6"],
+          ["Isolation_Mode", "Oskin-potato"]
       ]
       
       // MARK: First Item
@@ -199,7 +199,7 @@ class ChangeItems: UIView {
     
     private let zeroImageViewSixItem: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Oskin6-2")
+        imageView.image = UIImage(named: "Oskin-potato")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -211,14 +211,15 @@ class ChangeItems: UIView {
         super.init(frame: frame)
         setupView()
         setConstraints()
+        
         if let myValue = defaults.object(forKey: "GameCoverTypeIndex") {
               gameCoverTypeIndex = myValue as! Int
               
               print("gameCoverTypeIndex \(gameCoverTypeIndex)")
           }
           
-          setCover(index: gameCoverTypeIndex)
         addButtonInArray()
+        setCover(index: gameCoverTypeIndex)
     }
     
     required init?(coder: NSCoder) {
@@ -232,7 +233,6 @@ class ChangeItems: UIView {
         buttons.append(buttonForItem)
         buttons.append(buttonFiveItem)
         buttons.append(buttonSixItem)
-        
     }
     
     private func setupView() {
@@ -267,16 +267,9 @@ class ChangeItems: UIView {
         addSubview(zeroImageViewSixItem)
         addSubview(buttonSixItem)
         
-        for btn in [
-            button,
-            buttonSecondItem,
-            buttonThirdItem,
-            buttonForItem,
-            buttonFiveItem,
-            buttonSixItem
-        ] {
+        for btn in buttons {
             btn.isEnabled = true
-            btn.addTarget(self, action: #selector(selectNewCover), for: .touchUpInside)
+//            btn.addTarget(self, action: #selector(selectNewCover), for: .touchUpInside)
         }
         
         translatesAutoresizingMaskIntoConstraints = false
@@ -285,27 +278,20 @@ class ChangeItems: UIView {
     @objc func selectNewCover(btn: UIButton) {
         let index = btn.tag
         
-        print("selectNewCover \(index)")
-        
         setCover(index: index)
     }
     
     func setCover(index: Int) {
         let coverType = coversIconsList[index]
+        
+        print("cover \(coverType) \(coverType[0]) \(coverType[1])")
     
         defaults.set(index, forKey: "GameCoverTypeIndex")
-        defaults.set(coverType, forKey: "GameCoverIcons")
-
-        let buttonsList = [
-            button,
-            buttonSecondItem,
-            buttonThirdItem,
-            buttonForItem,
-            buttonFiveItem,
-            buttonSixItem,
-         ]
+//        defaults.set(coverType, forKey: "GameCoverIcons")
+        defaults.set(coverType[0], forKey: "GameCoverFirstIcon")
+        defaults.set(coverType[1], forKey: "GameCoverSecondIcon")
         
-        for btnEl in buttonsList {
+        for btnEl in buttons {
             if btnEl.tag == index {
                 btnEl.setTitle("Picked", for: .normal)
                 btnEl.backgroundColor = .blue

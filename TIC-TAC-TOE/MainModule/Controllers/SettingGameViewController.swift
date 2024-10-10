@@ -9,6 +9,8 @@ import UIKit
 
 class SettingGameViewController: UIViewController {
     
+    let defaults = UserDefaults.standard
+    
     private lazy var returnButton = ReturnButton(type: .system)
     
     private let gameTimeView = SettingGameView()
@@ -39,7 +41,9 @@ class SettingGameViewController: UIViewController {
     }
     
     @objc func itemButtonTapped(sender: UIButton) {
-        print("tapped")
+        print("tapped \(sender.tag)")
+        
+        items.setCover(index: sender.tag)
     }
 }
 
