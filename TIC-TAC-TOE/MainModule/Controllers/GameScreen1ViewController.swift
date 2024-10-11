@@ -63,6 +63,7 @@ final class GameScreen1ViewController: UIViewController {
         imageView.font = UIFont.customSemiBoldFont(size: 16)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.textAlignment = .center
+        imageView.textColor = .black
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -77,6 +78,7 @@ final class GameScreen1ViewController: UIViewController {
         let label = UILabel()
         label.text = "00:00"
         label.textAlignment = .center
+        label.textColor = .black
         label.font = UIFont.customBoldFont(size: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -102,6 +104,7 @@ final class GameScreen1ViewController: UIViewController {
         let imageView = UILabel()
 //        imageView.text = "Player Two"
         imageView.font = UIFont.customSemiBoldFont(size: 16)
+        imageView.textColor = .black
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -120,6 +123,7 @@ final class GameScreen1ViewController: UIViewController {
     private let turnLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.contentMode = .scaleAspectFit
         return label
@@ -139,6 +143,7 @@ final class GameScreen1ViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = UIColor.white
         view.layer.cornerRadius = 30
+        view.addShadowOnView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
