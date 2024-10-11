@@ -59,6 +59,7 @@ class SelectGame: UIView {
         self.layer.cornerRadius = 30
         
         self.backgroundColor = UIColor.white
+        self.addShadowOnView()
         setupViews()
         setConstrainsts()
     }
