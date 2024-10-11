@@ -403,7 +403,7 @@ extension GameScreen1ViewController {
         
         // Начальная точка
         let startX = (CGFloat(column) * (buttonSize + spacing)) + (buttonSize / 2) + 70 // Центр ячейки по X
-        let startY = (CGFloat(row) * (buttonSize + spacing)) + (buttonSize / 2) + 380 // Центр ячейки по Y
+        let startY = (CGFloat(row) * (buttonSize + spacing)) + (buttonSize / 2) + 365 // Центр ячейки по Y
         
         return CGPoint(x: startX, y: startY)
     }
